@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.apap.tugas1.model.InstansiModel;
 import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.model.JabatanPegawaiModel;
 import com.apap.tugas1.model.PegawaiModel;
@@ -63,5 +64,18 @@ public class PegawaiServiceImpl implements PegawaiService{
 		return (long)gaji;
 	}
 	
+	@Override
+	public PegawaiModel getPegawaiTertua(InstansiModel instansi) {
+		// TODO Auto-generated method stub
+		List<PegawaiModel> pegawaiTertua = pegawaiDb.findByInstansiOrderByTanggalLahirDesc(instansi);
+		return pegawaiTertua.get(0);
+	}
+	
+	@Override
+	public PegawaiModel getPegawaiTermuda(InstansiModel instansi) {
+		// TODO Auto-generated method stub
+		List<PegawaiModel> pegawaiTermuda = pegawaiDb.findByInstansiOrderByTanggalLahirDesc(instansi);
+		return pegawaiTermuda.get(pegawaiTermuda.size()-1);
+	}
 	
 }

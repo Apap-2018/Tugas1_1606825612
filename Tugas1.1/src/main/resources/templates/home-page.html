@@ -29,6 +29,16 @@
 				</select>
 				<button type="submit" class="btn btn-primary">Cari</button>
 			</form>
+			<h1>Lihat Pegawai Termuda dan Tertua</h1>
+			<h3>Pilih Instansi Di Bawah Ini</h3>
+			<form th:action="@{pegawai/termuda-tertua}" method=GET>
+				<select name="idInstansi">
+					<option th:each="instansi : ${listInstansiAvailable}"
+							th:value="${instansi.id}"
+							th:text="${instansi.nama}"></option>
+				</select>
+				<button type="submit" class="btn btn-primary">Cari</button>
+			</form>
 		</div>
 	</body>
 </html>
