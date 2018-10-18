@@ -12,12 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.apap.tugas1.model.JabatanModel;
+import com.apap.tugas1.model.JabatanPegawaiModel;
+import com.apap.tugas1.service.JabatanPegawaiService;
 import com.apap.tugas1.service.JabatanService;
 
 @Controller
 public class JabatanController {
 	@Autowired
 	private JabatanService jabatanService;
+	
+	@Autowired
+	private JabatanPegawaiService jabatanPegawaiService;
 	
 	//fitur 5 menambah jabatan
 	@RequestMapping(value = "/jabatan/tambah")
@@ -32,7 +37,7 @@ public class JabatanController {
 	private String tambahJabatanSubmit(@ModelAttribute JabatanModel jabatan, Model model) {
 		jabatanService.addJabatan(jabatan);
 		model.addAttribute("jabatan", jabatan);
-		return "success";
+		return "success-add";
 	}
 	
 	/**fitur 6 menampilkan data suatu jabatan GET agar bisa diambil dari list jabatan
@@ -42,6 +47,18 @@ public class JabatanController {
 		JabatanModel infoJabatan = jabatanService.getJabatanById(Long.parseLong(id)).get();
 		model.addAttribute("infoJabatan", infoJabatan);
 		return "detail-jabatan";
+	}
+	
+	//fitur 8 menghapus jabatan
+	@RequestMapping(value="/jabatan/delete", method=RequestMethod.POST)
+	private String deleteJabatan(String idJabatan) {
+		JabatanModel jabatan = jabatanService.getJabatanById(Long.parseLong(idJabatan)).get();
+		List<JabatanPegawaiModel> listJabatanPegawai = jabatanPegawaiService.getPegawaiById(Long.parseLong(idJabatan));
+		if(listJabatanPegawai.isEmpty()) {
+			jabatanService.deleteJabatan(jabatan);
+			return "success-delete";
+		}
+		return "error-delete";
 	}
 	
 	//fitur 9 menampilkan daftar jabatan
@@ -71,6 +88,6 @@ public class JabatanController {
 	private String ngubahJabatanSubmit(@ModelAttribute JabatanModel jabatan, Model model) {
 		jabatanService.addJabatan(jabatan);
 		model.addAttribute("jabatan", jabatan);
-		return "success";
+		return "success-change";
 	}
 }

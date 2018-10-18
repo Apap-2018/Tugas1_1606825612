@@ -35,5 +35,11 @@ public class JabatanServiceImpl implements JabatanService{
 		// TODO Auto-generated method stub
 		return jabatanDb.findAll();
 	}
+
+	@Override
+	public void deleteJabatan(JabatanModel jabatan) {
+		// TODO Auto-generated method stub
+		jabatanDb.delete(jabatan);
+	}
 	
 }

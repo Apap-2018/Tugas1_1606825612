@@ -85,6 +85,14 @@ public class PegawaiModel implements Serializable{
 	public void setInstansi(InstansiModel instansi) {
 		this.instansi = instansi;
 	}
+	
+	public List<JabatanPegawaiModel> getListJabatanPegawai() {
+		return listJabatanPegawai;
+	}
+
+	public void setListJabatanPegawai(List<JabatanPegawaiModel> listJabatanPegawai) {
+		this.listJabatanPegawai = listJabatanPegawai;
+	}
 
 	@NotNull
 	@Size(max=255)
@@ -110,17 +118,9 @@ public class PegawaiModel implements Serializable{
 	@Column(name="tahun_masuk",nullable=false)
 	private String tahun_masuk;
 	
-	 @OneToMany(mappedBy = "pegawai", fetch = FetchType.LAZY)
-	 @OnDelete(action = OnDeleteAction.CASCADE)
-	 private List<JabatanPegawaiModel> listJabatanPegawai;
-	
-	public List<JabatanPegawaiModel> getListJabatanPegawai() {
-		return listJabatanPegawai;
-	}
-
-	public void setListJabatanPegawai(List<JabatanPegawaiModel> listJabatanPegawai) {
-		this.listJabatanPegawai = listJabatanPegawai;
-	}
+	@OneToMany(mappedBy = "pegawai", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private List<JabatanPegawaiModel> listJabatanPegawai;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_instansi",referencedColumnName="id", nullable=false)
