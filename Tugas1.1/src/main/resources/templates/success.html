@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<title th:replace="fragments/fragment :: title('Sukses')"></title>
-		<object th:include="fragments/fragment :: css" th:remove="tag"></object>
-		<object th:include="fragments/fragment :: js" th:remove="tag"></object>
-	</head>
-	<body>
-		<nav th:replace="fragments/fragment :: navbar"></nav>
-		<h2>SUKSES MENAMBAHKAN</h2>
-	</body>
+<head>
+	<title>Berhasil</title>
+	
+	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+	<object th:include="fragments/fragment :: js" th:remove="tag"></object>	
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+	
+	<div style="text-align:center; padding-top: 25px;">
+		<h1>SUKSES!!</h1><br>
+		<h3 th:text="${message}"></h3>
+	</div>
+</body>
 </html>

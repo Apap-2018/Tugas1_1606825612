@@ -6,4 +6,5 @@ import com.apap.tugas1.model.JabatanPegawaiModel;
 
 public interface JabatanPegawaiService {
 	List<JabatanPegawaiModel> getPegawaiById(Long id);
+	
 }

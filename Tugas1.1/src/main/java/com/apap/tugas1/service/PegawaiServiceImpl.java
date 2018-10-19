@@ -1,5 +1,6 @@
 package com.apap.tugas1.service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +77,25 @@ public class PegawaiServiceImpl implements PegawaiService{
 		// TODO Auto-generated method stub
 		List<PegawaiModel> pegawaiTermuda = pegawaiDb.findByInstansiOrderByTanggalLahirDesc(instansi);
 		return pegawaiTermuda.get(pegawaiTermuda.size()-1);
+	}
+
+	@Override
+	public List<PegawaiModel> getPegawaiByInstansiDanJabatan(InstansiModel instansi, JabatanModel jabatan) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByInstansiAndJabatan(instansi, jabatan);
+	}
+
+	@Override
+	public List<PegawaiModel> getPegawaiByInstansi(InstansiModel instansi) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByInstansi(instansi);
+	}
+
+	@Override
+	public List<PegawaiModel> getPegawaiByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi,
+			Date tanggalLahir, String tahunMasuk) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(instansi, tanggalLahir, tahunMasuk);
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -43,7 +46,7 @@ public class PegawaiModel implements Serializable{
 	}
 
 	public void setNip(String nip) {
-		nip= nip;
+		this.nip= nip;
 	}
 
 	public String getNama() {
@@ -54,12 +57,12 @@ public class PegawaiModel implements Serializable{
 		this.nama = nama;
 	}
 
-	public String getTempat_lahir() {
-		return tempat_lahir;
+	public String getTempatLahir() {
+		return tempatLahir;
 	}
 
-	public void setTempat_lahir(String tempat_lahir) {
-		this.tempat_lahir = tempat_lahir;
+	public void setTempatLahir(String tempatLahir) {
+		this.tempatLahir = tempatLahir;
 	}
 
 	public Date getTanggal_lahir() {
@@ -70,12 +73,12 @@ public class PegawaiModel implements Serializable{
 		this.tanggalLahir = tanggal_lahir;
 	}
 
-	public String getTahun_masuk() {
-		return tahun_masuk;
+	public String getTahunMasuk() {
+		return tahunMasuk;
 	}
 
-	public void setTahun_masuk(String tahun_masuk) {
-		this.tahun_masuk = tahun_masuk;
+	public void setTahunMasuk(String tahun_masuk) {
+		this.tahunMasuk = tahun_masuk;
 	}
 
 	public InstansiModel getInstansi() {
@@ -107,7 +110,7 @@ public class PegawaiModel implements Serializable{
 	@NotNull
 	@Size(max=255)
 	@Column(name="tempat_lahir",nullable=false)
-	private String tempat_lahir;
+	private String tempatLahir;
 	
 	@NotNull
 	@Column(name="tanggal_lahir",nullable=false)
@@ -116,16 +119,36 @@ public class PegawaiModel implements Serializable{
 	@NotNull
 	@Size(max=255)
 	@Column(name="tahun_masuk",nullable=false)
-	private String tahun_masuk;
+	private String tahunMasuk;
 	
-	@OneToMany(mappedBy = "pegawai", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OneToMany(mappedBy="pegawai", fetch=FetchType.LAZY)
+	@OnDelete(action= OnDeleteAction.CASCADE)
 	private List<JabatanPegawaiModel> listJabatanPegawai;
-
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_instansi",referencedColumnName="id", nullable=false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JsonIgnore
 	private InstansiModel instansi;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "jabatan_pegawai", joinColumns = {@JoinColumn(name = "id_pegawai")}, inverseJoinColumns = {@JoinColumn(name = "id_jabatan")})
+	private List<JabatanModel> jabatan = new ArrayList<JabatanModel>();
+
+	public Date getTanggalLahir() {
+		return tanggalLahir;
+	}
+
+	public void setTanggalLahir(Date tanggalLahir) {
+		this.tanggalLahir = tanggalLahir;
+	}
+
+	public List<JabatanModel> getJabatan() {
+		return jabatan;
+	}
+
+	public void setJabatan(List<JabatanModel> jabatan) {
+		this.jabatan = jabatan;
+	}
 
 }

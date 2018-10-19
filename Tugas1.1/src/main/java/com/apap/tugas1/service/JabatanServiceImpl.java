@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.apap.tugas1.model.JabatanModel;
+import com.apap.tugas1.model.JabatanPegawaiModel;
 import com.apap.tugas1.repository.JabatanDb;
 
 @Service
@@ -40,6 +41,16 @@ public class JabatanServiceImpl implements JabatanService{
 	public void deleteJabatan(JabatanModel jabatan) {
 		// TODO Auto-generated method stub
 		jabatanDb.delete(jabatan);
+	}
+
+	@Override
+	public void updateJabatan(JabatanModel jabatan, Long idJabatan) {
+		// TODO Auto-generated method stub
+		JabatanModel updateJabatan = jabatanDb.getOne(idJabatan);
+		updateJabatan.setNama(jabatan.getNama());
+		updateJabatan.setGaji_pokok(jabatan.getGaji_pokok());
+		updateJabatan.setDeskripsi(jabatan.getDeskripsi());
+		jabatanDb.save(updateJabatan);
 	}
 	
 }

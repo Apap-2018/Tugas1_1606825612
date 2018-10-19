@@ -26,21 +26,6 @@ public class JabatanPegawaiModel implements Serializable{
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_pegawai", referencedColumnName="id", nullable=false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	private PegawaiModel pegawai;
-	
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "id_jabatan", referencedColumnName="id", nullable=false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	private JabatanModel jabatan;
 	
 	public JabatanModel getJabatan() {
 		return jabatan;
@@ -57,5 +42,20 @@ public class JabatanPegawaiModel implements Serializable{
 	public void setPegawai(PegawaiModel pegawai) {
 		this.pegawai=pegawai;
 	}
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_pegawai", referencedColumnName="id", nullable=false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private PegawaiModel pegawai;
+	
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "id_jabatan", referencedColumnName="id", nullable=false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private JabatanModel jabatan;
 
 }

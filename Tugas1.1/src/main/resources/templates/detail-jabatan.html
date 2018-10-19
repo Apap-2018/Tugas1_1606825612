@@ -19,8 +19,12 @@
 				<td th:text="${infoJabatan.deskripsi}"></td>
 			</tr>
 			<tr>
+				<td>Jumlah Pegawai</td>
+				<td th:text="${jumlahPegawai}"></td>
+			</tr>
+			<tr>
 				<td>Gaji Pokok</td>
-				<td th:text="${infoJabatan.gaji_pokok}"></td>
+				<td th:text="'Rp' + ${infoGaji}"></td>
 			</tr>
 		</table>
 		

@@ -1,8 +1,11 @@
 package com.apap.tugas1.service;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.apap.tugas1.model.InstansiModel;
+import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.model.PegawaiModel;
 
 
@@ -15,4 +18,7 @@ public interface PegawaiService {
 	long hitungGaji(PegawaiModel pegawai);
 	PegawaiModel getPegawaiTertua(InstansiModel instansi);
 	PegawaiModel getPegawaiTermuda(InstansiModel instansi);
+	List<PegawaiModel> getPegawaiByInstansiDanJabatan(InstansiModel instansi, JabatanModel jabatan);
+	List<PegawaiModel> getPegawaiByInstansi(InstansiModel instansi);
+	List<PegawaiModel> getPegawaiByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
 }

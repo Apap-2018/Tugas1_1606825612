@@ -7,5 +7,5 @@ import com.apap.tugas1.model.ProvinsiModel;
 
 @Repository
 public interface ProvinsiDb extends JpaRepository<ProvinsiModel, Long>{
-
+	ProvinsiModel findById(int id);
 }

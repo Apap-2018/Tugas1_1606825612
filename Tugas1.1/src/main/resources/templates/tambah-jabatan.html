@@ -8,10 +8,14 @@
 	<body>
 		<nav th:replace="fragments/fragment :: navbar"></nav>
 		
-		<div class="container-fluid">
-			<h2>Tambah Jabatan</h2>
-			<form th:action="@{/jabatan/tambah}" th:object=${jabatan} method="POST">
-				<table>
+		<center><div class="container-fluid">
+			<div class="col-md-6">
+    			<div class="card border-info mb-3 text-center" style="margin:25px;">
+    				<div class="card-header">
+      				Tambah Jabatan
+     				</div>
+					<form th:action="@{/jabatan/tambah}" th:object=${jabatan} method="POST">
+					<div class="card-body">
 					<tr>
 						<td>Nama</td>
 						<td><input type="text" name="nama" class="form-control"/></td>
@@ -27,8 +31,9 @@
 		            <tr>
 		                <td><button type="submit" class="btn btn-primary">Tambah</button><td>
 		            </tr>
-				</table>
+					</div>
 			</form>
 		</div>
+		</center>
 	</body>
 </html>

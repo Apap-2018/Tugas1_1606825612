@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.apap.tugas1.model.JabatanModel;
 import com.apap.tugas1.model.JabatanPegawaiModel;
@@ -45,17 +46,22 @@ public class JabatanController {
 	@RequestMapping(value="/jabatan/view", method=RequestMethod.GET)
 	private String viewJabatan(@RequestParam(value="idJabatan") String id, Model model) {
 		JabatanModel infoJabatan = jabatanService.getJabatanById(Long.parseLong(id)).get();
+		int jumlahPegawai = infoJabatan.getListJabatanPegawai().size();
+		double gaji = infoJabatan.getGaji_pokok();
 		model.addAttribute("infoJabatan", infoJabatan);
+		model.addAttribute("jumlahPegawai", jumlahPegawai);
+		model.addAttribute("infoGaji", (long) gaji);
 		return "detail-jabatan";
 	}
 	
 	//fitur 8 menghapus jabatan
 	@RequestMapping(value="/jabatan/delete", method=RequestMethod.POST)
-	private String deleteJabatan(String idJabatan) {
+	private String deleteJabatan(String idJabatan, Model model) {
 		JabatanModel jabatan = jabatanService.getJabatanById(Long.parseLong(idJabatan)).get();
 		List<JabatanPegawaiModel> listJabatanPegawai = jabatanPegawaiService.getPegawaiById(Long.parseLong(idJabatan));
 		if(listJabatanPegawai.isEmpty()) {
 			jabatanService.deleteJabatan(jabatan);
+			model.addAttribute("jabatan", jabatan);
 			return "success-delete";
 		}
 		return "error-delete";
@@ -85,9 +91,10 @@ public class JabatanController {
 	
 	//fitur 7 mengubah data jabatan POST untuk mengubahnya di database
 	@RequestMapping(value="/jabatan/ubah", method=RequestMethod.POST)
-	private String ngubahJabatanSubmit(@ModelAttribute JabatanModel jabatan, Model model) {
-		jabatanService.addJabatan(jabatan);
-		model.addAttribute("jabatan", jabatan);
-		return "success-change";
+	private String ngubahJabatanSubmit(@ModelAttribute JabatanModel jabatan, Model model, RedirectAttributes redirectAttrs) {
+		jabatanService.updateJabatan(jabatan, jabatan.getId());
+		redirectAttrs.addFlashAttribute("message", "Yay Jabatan Berhasil Diubah Nih!");
+		redirectAttrs.addAttribute("idJabatan", jabatan.getId());
+		return "redirect:/jabatan/ubah";
 	}
 }
