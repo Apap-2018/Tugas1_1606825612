@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -117,4 +119,124 @@ public class PegawaiController {
 		model.addAttribute("message", msg);
 		return "success";
 	}
+	
+	@RequestMapping(value="/pegawai/tambah", params={"deleteRow"}, method = RequestMethod.POST)
+	public String deleteRow(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, HttpServletRequest req,Model model) {
+		
+		List<ProvinsiModel> listProvinsi = provinsiService.findAllProvinsi();
+		List<JabatanModel> listJabatan = jabatanService.getAll();
+		
+		model.addAttribute("listJabatan", listJabatan);
+		model.addAttribute("listProvinsi", listProvinsi);
+		
+		Integer rowId = Integer.valueOf(req.getParameter("deleteRow"));
+		pegawai.getJabatan().remove(rowId.intValue());
+	    model.addAttribute("pegawai", pegawai);
+	    return "add-pegawai";
+	}
+	
+	@RequestMapping(value="/pegawai/ubah", method = RequestMethod.GET)
+	public String updatePegawai(@RequestParam("nip") String nip, Model model) {
+		
+		List<ProvinsiModel> listProvinsi = provinsiService.findAllProvinsi();
+		List<JabatanModel> listJabatan = jabatanService.getAll();
+		
+		model.addAttribute("listJabatan", listJabatan);
+		model.addAttribute("listProvinsi", listProvinsi);
+		
+		PegawaiModel pegawai = pegawaiService.getPegawaiByNip(nip);
+		
+	    model.addAttribute("pegawai", pegawai);
+	    return "ubah-pegawai";
+	}
+	
+	@RequestMapping(value="/pegawai/ubah", params={"addRow"}, method = RequestMethod.POST)
+	public String addRowUpdate(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
+		
+		List<ProvinsiModel> listProvinsi = provinsiService.findAllProvinsi();
+		List<JabatanModel> listJabatan = jabatanService.getAll();
+		
+		model.addAttribute("listJabatan", listJabatan);
+		model.addAttribute("listProvinsi", listProvinsi);
+		
+		
+		pegawai.getJabatan().add(new JabatanModel());
+	    model.addAttribute("pegawai", pegawai);
+	    return "ubah-pegawai";
+	}
+	
+	@RequestMapping(value="/pegawai/ubah", params={"deleteRow"}, method = RequestMethod.POST)
+	public String deleteRowUpdate(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, HttpServletRequest req,Model model) {
+		
+		List<ProvinsiModel> listProvinsi = provinsiService.findAllProvinsi();
+		List<JabatanModel> listJabatan = jabatanService.getAll();
+		
+		model.addAttribute("listJabatan", listJabatan);
+		model.addAttribute("listProvinsi", listProvinsi);
+		
+		Integer rowId = Integer.valueOf(req.getParameter("deleteRow"));
+		pegawai.getJabatan().remove(rowId.intValue());
+	    model.addAttribute("pegawai", pegawai);
+	    return "ubah-pegawai";
+	}
+	
+	@RequestMapping(value = "/pegawai/ubah", method = RequestMethod.POST)
+	private String updatePegawaiSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
+		String oldNip = pegawai.getNip();
+		PegawaiModel oldPegawai = pegawaiService.getPegawaiByNip(oldNip);
+		
+		String newNip;
+		if((!oldPegawai.getTahunMasuk().equals(pegawai.getTahunMasuk())) || 
+				(!oldPegawai.getTanggalLahir().equals(pegawai.getTanggalLahir())) || 
+				(!oldPegawai.getInstansi().equals(pegawai.getInstansi()))) {
+			
+			String kode = pegawai.getInstansi().getId().toString();
+			
+			SimpleDateFormat newFormat = new SimpleDateFormat("dd-MM-yy");
+			String tanggalLahir = newFormat.format(pegawai.getTanggalLahir()).replaceAll("-", "");
+			
+			String tahunKerja = pegawai.getTahunMasuk();
+			
+			int urutan = pegawaiService.getPegawaiByInstansiAndTanggalLahirAndTahunMasuk(pegawai.getInstansi(), pegawai.getTanggalLahir(), pegawai.getTahunMasuk()).size()+1;
+			
+			String strUrutan;
+			if(urutan<10) strUrutan="0"+urutan;
+			else strUrutan=""+urutan;
+			
+			newNip = kode + tanggalLahir + tahunKerja + strUrutan;
+			pegawai.setNip(newNip);
+		}
+		else {
+			 newNip = oldNip;
+			 pegawai.setNip(oldNip);
+		}
+		
+		
+		pegawaiService.updatePegawai(oldNip, pegawai);
+		
+		String msg = "Pegawai dengan NIP "+ newNip +" berhasil diubah";
+		model.addAttribute("message", msg);
+		return "success";
+	}
+	@RequestMapping(value="/pegawai/cari", method=RequestMethod.GET)
+	/**private String cariPegawai(@RequestParam(required=false) Optional<Long> idProvinsi, 
+			@RequestParam(required=false) Optional<Long> idJabatan,
+			@RequestParam(required=false) Optional<Long> idInstansi, Model model) {
+		List<PegawaiModel> listPegawai = pegawaiService.findByInstansiIdOrInstansiProvinsiIdOrJabatanId(idInstansi, idProvinsi, idJabatan);
+		model.addAttribute("listPegawai", listPegawai);**/
+		private String cariPegawai(Model model) {
+		List<ProvinsiModel> listProvinsi = provinsiService.findAllProvinsi();
+		List<JabatanModel> listJabatan = jabatanService.getAll();
+		List<InstansiModel> listInstansi = instansiService.getAll();
+		PegawaiModel pegawai = new PegawaiModel();
+		pegawai.setJabatan(new ArrayList<JabatanModel>());
+		pegawai.getJabatan().add(new JabatanModel());
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("listProvinsi", listProvinsi);
+		model.addAttribute("listJabatan", listJabatan);
+		model.addAttribute("listInstansi", listInstansi);
+		return "cari-pegawai";
+	}
+	
 }
+

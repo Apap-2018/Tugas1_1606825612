@@ -18,15 +18,15 @@
 			</tr>
 			<tr>
 				<td>Tempat Lahir</td>
-				<td th:text="${pegawai.tempat_lahir}"></td>
+				<td th:text="${pegawai.tempatLahir}"></td>
 			</tr>
 			<tr>
 				<td>Tanggal Lahir</td>
-				<td th:text="${pegawai.tanggal_lahir}"></td>
+				<td th:text="${pegawai.tanggalLahir}"></td>
 			</tr>
 			<tr>
 				<td>Tahun Masuk</td>
-				<td th:text="${pegawai.tahun_masuk}"></td>
+				<td th:text="${pegawai.tahunMasuk}"></td>
 			</tr>
 			<tr>
 				<td>Nama Instansi</td>
@@ -44,6 +44,8 @@
 				<td th:text="'Rp ' + ${gajiPegawai}"></td>
 			</tr>			
 		</table>
-		<!-- <a th:href="@{'/pegawai/ubah/' + ${pegawai.nip}}" >Ubah</a><br> -->
+		<form th:action="@{'/pegawai/ubah'}" th:object="${pegawai}" method="GET">
+			<input type="hidden" th:value="${pegawai.nip}" name="nip" />
+			<button value="submit">Ubah</button>
 	</body>
 </html>

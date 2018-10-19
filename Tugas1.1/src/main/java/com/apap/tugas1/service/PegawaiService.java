@@ -12,7 +12,7 @@ import com.apap.tugas1.model.PegawaiModel;
 public interface PegawaiService {
 	void addPegawai (PegawaiModel pegawai);
 	void deletePegawai (PegawaiModel pegawai);
-	void updatePegawai (PegawaiModel pegawai);
+	void updatePegawai(String nip, PegawaiModel pegawai);
 	Optional<PegawaiModel> getPegawaiDetailById(Long id);
 	PegawaiModel getPegawaiByNip(String nip);
 	long hitungGaji(PegawaiModel pegawai);
@@ -21,4 +21,5 @@ public interface PegawaiService {
 	List<PegawaiModel> getPegawaiByInstansiDanJabatan(InstansiModel instansi, JabatanModel jabatan);
 	List<PegawaiModel> getPegawaiByInstansi(InstansiModel instansi);
 	List<PegawaiModel> getPegawaiByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
+	List<PegawaiModel> findByInstansiIdOrInstansiProvinsiIdOrJabatanId(long idInstansi, long idProvinsi, long idJabatan);
 }

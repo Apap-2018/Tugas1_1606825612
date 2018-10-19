@@ -34,11 +34,7 @@ public class PegawaiServiceImpl implements PegawaiService{
 		
 	}
 
-	@Override
-	public void updatePegawai(PegawaiModel pegawai) {
-		pegawaiDb.save(pegawai);
-		
-	}
+	
 
 	@Override
 	public Optional<PegawaiModel> getPegawaiDetailById(Long id) {
@@ -97,5 +93,28 @@ public class PegawaiServiceImpl implements PegawaiService{
 		// TODO Auto-generated method stub
 		return pegawaiDb.findByInstansiAndTanggalLahirAndTahunMasuk(instansi, tanggalLahir, tahunMasuk);
 	}
+
+	@Override
+	public List<PegawaiModel> findByInstansiIdOrInstansiProvinsiIdOrJabatanId(long idInstansi, long idProvinsi,
+			long idJabatan) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByInstansiIdOrInstansiProvinsiIdOrJabatanId(idInstansi, idProvinsi, idJabatan);
+	}
+
+	@Override
+	public void updatePegawai(String nip, PegawaiModel pegawai) {
+		// TODO Auto-generated method stub
+		PegawaiModel updatePegawai = pegawaiDb.findByNip(nip);
+		updatePegawai.setNama(pegawai.getNama());
+		updatePegawai.setNip(pegawai.getNip());
+		updatePegawai.setTahunMasuk(pegawai.getTahunMasuk());
+		updatePegawai.setJabatan(pegawai.getJabatan());
+		updatePegawai.setTanggalLahir(pegawai.getTanggalLahir());
+		updatePegawai.setTempatLahir(pegawai.getTempatLahir());
+		updatePegawai.setInstansi(pegawai.getInstansi());
+		pegawaiDb.save(updatePegawai);
+	}
+
+	
 	
 }
