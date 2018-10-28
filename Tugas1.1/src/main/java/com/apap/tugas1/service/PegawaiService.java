@@ -19,6 +19,7 @@ public interface PegawaiService {
 	PegawaiModel getPegawaiTertua(InstansiModel instansi);
 	PegawaiModel getPegawaiTermuda(InstansiModel instansi);
 	List<PegawaiModel> getPegawaiByInstansiDanJabatan(InstansiModel instansi, JabatanModel jabatan);
+	List<PegawaiModel> getPegawaiByJabatan(JabatanModel jabatan);
 	List<PegawaiModel> getPegawaiByInstansi(InstansiModel instansi);
 	List<PegawaiModel> getPegawaiByInstansiAndTanggalLahirAndTahunMasuk(InstansiModel instansi, Date tanggalLahir, String tahunMasuk);
 	List<PegawaiModel> findByInstansiIdOrInstansiProvinsiIdOrJabatanId(long idInstansi, long idProvinsi, long idJabatan);

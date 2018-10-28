@@ -1,18 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title th:replace="fragments/fragment :: title('Cari Pegawai')"></title>
 	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
 	<object th:include="fragments/fragment :: js" th:remove="tag"></object>	
 </head>
-
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
-	
-
-			<div class="card border-info mb-3" style="margin:25px;">
-				<div class="card-header" style="text-align:center">
-					 <h3>Cari Pegawai</h3>
-				</div>
-				<div class="card-body">
+		<div class="card border-info mb-3" style="margin:25px;">
+			<div class="card-header" style="text-align:center">
+				<h3>Cari Pegawai</h3>
+			</div>
+			<div class="card-body">
 					<div class="container">
 						<form  th:action="@{/pegawai/cari}" th:object="${pegawai}" method ="GET">
   							<div class="form-group">
@@ -41,5 +41,64 @@
 					</div>
 				</div>
 			</div>
+			
+			<div class="card border-info mb-3 text-center" style="margin:25px;">
+				<div class="card-header">
+					 <h3>Hasil Pencarian Pegawai</h3>
+				</div>
+				<div class="card-body">
+					<div class="container">
+						<table id="table_id" class="display table table-borderclass table-striped">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>NIP</th>
+									<th>Nama</th>
+									<th>Tempat Lahir</th>
+									<th>Tanggal Lahir</th>
+									<th>Tahun Masuk</th>
+									<th>Jabatan</th>
+								</tr>
+							</thead>
+								<tr th:each="pegawai,iterationStatus : ${listPegawai}">
+									<td th:text="${iterationStatus.count}"></td>
+									<td th:text="${pegawai.nip}"></td>
+									<td th:text="${pegawai.nama}"></td>
+									<td th:text="${pegawai.tempatLahir}"></td>
+   									<td th:text="${pegawai.tanggalLahir}"></td>
+   									<td th:text="${pegawai.tahunMasuk}"></td><td>
+      								<ul th:each="jabatan : ${pegawai.jabatan}">
+ 										<li th:text="${jabatan.nama}"/>	
+ 									</ul>
+ 									</td>
+ 								</tr>
+						</table>
+					</div>
+				</div>
+			</div>
 	</body>
+	
+	<script th:inline="javascript">
+	$(document).ready(funtion() {
+		$('#table_id').DataTable();
+	});
+	
+	$('provinsi').change(
+		funtion() {
+			console.log($(this).val());
+			value = $(this).val();
+			$.getJSON("/instansi/getInstansiByProvinsi", {
+				idProvinsi : value,
+				ajax : 'true'
+			}, function(data) {
+				var html = '',
+				var size = data.length;
+				html += '<option disabled="disabled" selected="selected">Pilih Instansi</option>';
+				for (var i = 0; i < size; i++){
+					html += '<option value=" ' + data[i].id + '">' + data[i].nama + '</option>';
+				}
+				$('#instansi').html(html);
+			});
+		});
+	</script>
 </html>

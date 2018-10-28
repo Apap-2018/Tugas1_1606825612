@@ -34,8 +34,6 @@ public class PegawaiServiceImpl implements PegawaiService{
 		
 	}
 
-	
-
 	@Override
 	public Optional<PegawaiModel> getPegawaiDetailById(Long id) {
 		return pegawaiDb.findById(id);
@@ -113,6 +111,12 @@ public class PegawaiServiceImpl implements PegawaiService{
 		updatePegawai.setTempatLahir(pegawai.getTempatLahir());
 		updatePegawai.setInstansi(pegawai.getInstansi());
 		pegawaiDb.save(updatePegawai);
+	}
+
+	@Override
+	public List<PegawaiModel> getPegawaiByJabatan(JabatanModel jabatan) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByJabatan(jabatan);
 	}
 
 	

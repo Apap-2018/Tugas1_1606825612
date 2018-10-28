@@ -3,6 +3,7 @@ package com.apap.tugas1.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -218,25 +219,81 @@ public class PegawaiController {
 		model.addAttribute("message", msg);
 		return "success";
 	}
+	
 	@RequestMapping(value="/pegawai/cari", method=RequestMethod.GET)
-	/**private String cariPegawai(@RequestParam(required=false) Optional<Long> idProvinsi, 
-			@RequestParam(required=false) Optional<Long> idJabatan,
-			@RequestParam(required=false) Optional<Long> idInstansi, Model model) {
-		List<PegawaiModel> listPegawai = pegawaiService.findByInstansiIdOrInstansiProvinsiIdOrJabatanId(idInstansi, idProvinsi, idJabatan);
-		model.addAttribute("listPegawai", listPegawai);**/
-		private String cariPegawai(Model model) {
-		List<ProvinsiModel> listProvinsi = provinsiService.findAllProvinsi();
-		List<JabatanModel> listJabatan = jabatanService.getAll();
-		List<InstansiModel> listInstansi = instansiService.getAll();
-		PegawaiModel pegawai = new PegawaiModel();
-		pegawai.setJabatan(new ArrayList<JabatanModel>());
-		pegawai.getJabatan().add(new JabatanModel());
-		model.addAttribute("pegawai", pegawai);
-		model.addAttribute("listProvinsi", listProvinsi);
-		model.addAttribute("listJabatan", listJabatan);
-		model.addAttribute("listInstansi", listInstansi);
+	private String filterPegawai(@RequestParam(value="idProvinsi", required=false) Optional<Long> idProvinsi,
+								@RequestParam(value="idJabatan", required=false) Optional<Long> idJabatan,
+								@RequestParam(value="idInstansi", required=false) Optional<Long> idInstansi,
+								Model model) {
+		List<JabatanModel> listAllJabatan = jabatanService.getAll();
+		List<ProvinsiModel> listAllProvinsi = provinsiService.findAllProvinsi();
+		List<InstansiModel> listAllInstansi = instansiService.getAll();
+		model.addAttribute("listJabatan", listAllJabatan);
+		model.addAttribute("listProvinsi", listAllProvinsi);
+		model.addAttribute("listInstansi", listAllInstansi);
+		
+		List<PegawaiModel> pegawai = new ArrayList<PegawaiModel>();
+		/**
+		 * kalau yg diketahui Instansi, maka kita bisa ambil kan jabatan yang ada di instansi tersebut
+		 * ngecek juga kalau dia dik jabatannya, maka cari pegawai yang sesuai dengan jabatan-instansinya
+		 * kalau gaada berarti keluarin aja pegawai yang ada di instansi tersebut
+		 */
+		if(idInstansi.isPresent()) {
+			InstansiModel instansi = instansiService.getInstansiById(idInstansi.get()).get();
+			
+			if(idJabatan.isPresent()) {
+				JabatanModel jabatan = jabatanService.getJabatanById(idJabatan.get()).get();
+				pegawai = pegawaiService.getPegawaiByInstansiDanJabatan(instansi, jabatan);
+			} else {
+				pegawai = pegawaiService.getPegawaiByInstansi(instansi);
+			}
+		}
+		/**
+		 * ngecek kalau bukan instansi yang diketahui, kita buat var tempPegawai dulu sementara
+		 * kalau dik provinsinya maka ambil provinsinya dan buat list instansi yang ada di provinsi tersebut
+		 */
+		else {
+			List<PegawaiModel> tampungPegawai = new ArrayList<PegawaiModel>();
+			if(idProvinsi.isPresent()) {
+				ProvinsiModel provinsi = provinsiService.getProvinsiDetailById(idProvinsi.get()).get();
+				
+				List<InstansiModel> listInstansi = instansiService.getInstansiByProvinsi(provinsi);
+				
+				/**
+				 * cek lagi kalau dia dik jabatannya, maka buat jabatannya
+				 * dan cek di dalam listInstansi tersebut, tampungPegawai isinya cari pegawai
+				 * berdasarkan instansi&jabatannya
+				 * masukan pegawai = tampungPegawai yg sudah terisi
+				 */
+				if(idJabatan.isPresent()) {
+					JabatanModel jabatan = jabatanService.getJabatanById(idJabatan.get()).get();
+					
+					for(InstansiModel instansi : listInstansi) {
+						tampungPegawai = pegawaiService.getPegawaiByInstansiDanJabatan(instansi, jabatan);
+					}
+					pegawai = tampungPegawai;
+				}
+				/**
+				 * kalau ga dik jabatannya maka cari pegawai berdasarkan instansi saja ya
+				 * ganti pegawai = tampungPegawai yg sudah terisi
+				 */
+				else {
+					for (InstansiModel instansi : listInstansi) {
+						tampungPegawai = pegawaiService.getPegawaiByInstansi(instansi);
+					}
+					pegawai = tampungPegawai;
+				}
+			/**
+			 * kalau yang diketahui jabatan saja maka langsung cari pegawai berdasarkan jabatannya aja ya
+			 */
+			} else if(idJabatan.isPresent()) {
+				JabatanModel jabatan = jabatanService.getJabatanById(idJabatan.get()).get();
+				pegawai = pegawaiService.getPegawaiByJabatan(jabatan);
+			}
+		}
+		
+		model.addAttribute("listPegawai", pegawai);
 		return "cari-pegawai";
 	}
-	
 }
 
